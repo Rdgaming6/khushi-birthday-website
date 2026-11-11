@@ -183,7 +183,7 @@ h2 .gold{color:var(--gold2)}
   <p style="font-family:'Playfair Display',serif;font-size:clamp(21px,5vw,27px);margin-top:14px">Happy Birthday, Khushi! ❤️</p>
   <p class="lead" style="margin-top:10px">12 November 2026 &nbsp;·&nbsp; 19th Birthday &nbsp;·&nbsp; 403 days since 5 October 2025</p>
   <button class="btn glow-btn" id="openBtn">✨ Open Your Surprise ✨</button>
-  <p style="margin-top:16px;font-size:13px;opacity:.75">Music starts as the page opens — if your phone holds it back, one tap anywhere starts it. 🎵</p>
+  <p style="margin-top:16px;font-size:13px;opacity:.75">Music starts when the page opens — and any tap anywhere starts it again if it ever stops. 🎵</p>
 </section>
 
 <!-- SHAYARI · chosen #2 -->
@@ -424,6 +424,7 @@ $('muteBtn').addEventListener('click',function(){
   musicMuted=!musicMuted;clickSound();
   try{sessionStorage.setItem('kuhuuu-music-muted',musicMuted?'1':'0')}catch(e){}
   syncControls();toast(musicMuted?'Music muted':'Music unmuted');
+  if(!musicMuted){startMusic()}
 });
 $('vol').addEventListener('input',function(){try{sessionStorage.setItem('kuhuuu-vol',this.value)}catch(e){}});
 $('soundBtn').addEventListener('click',function(){
@@ -433,16 +434,20 @@ $('soundBtn').addEventListener('click',function(){
 });
 syncControls();
 
-/* ---------- music: try to start immediately on open ---------- */
+/* ---------- music: start on open, and on ANY tap while stopped ---------- */
 /* Phones/browsers often block audible autoplay until the first tap, so we
-   try on load AND resume on the very first touch/click/keypress anywhere.
-   The melody holds its place while the audio is suspended, so nothing
-   is played silently through. */
+   try on load AND start (or resume) on every tap/keypress anywhere while
+   the music is stopped. Taps on the music controls themselves are
+   excluded, so pause/mute/volume still work — a pause lasts until the
+   next tap anywhere else, and mute is always respected. The melody holds
+   its place while audio is suspended, so nothing is played silently. */
 if(!musicMuted){startMusic()}
-['pointerdown','touchstart','keydown'].forEach(function(ev){
-  document.addEventListener(ev,function(){
-    if(!musicOn&&!musicMuted){startMusic()}else{try{ctx()}catch(e){}}
-  },{once:true});
+['pointerdown','keydown','click'].forEach(function(ev){
+  document.addEventListener(ev,function(e){
+    if(musicMuted){return}
+    if(e.target&&e.target.closest&&e.target.closest('#musicBtn,#muteBtn,#soundBtn,#vol,.controls')){return}
+    if(!musicOn){startMusic()}else{try{ctx()}catch(err){}}
+  });
 });
 
 /* heart bursts on empty-area clicks (not on controls) */
