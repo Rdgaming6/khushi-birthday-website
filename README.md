@@ -24,9 +24,9 @@ First met: 5 October 2025 (college program, start of first year) → 403 days to
 - Finale: pink/gold fireworks canvas, heart particles, falling petals, "Happy 19th Birthday, Khushi Koli! ❤️" + closing paragraphs verbatim + "Some surprises are created with code, but the feelings behind them are real. 💗"
 
 ## Still needed from Rajas
-1. **12 real photos** — create `photos/` inside this folder and drop `photo-01.jpg` … `photo-12.jpg` (see the comment at the top of `index.html`). No photos have been uploaded yet as of 11 Nov 18:05 IST.
+1. **2 more photos for frames 11–12** — 10 real photos added 11 Nov 18:38 IST as `photos/photo-01.jpg` … `photo-10.jpg` (optimised to max 1200px, EXIF stripped, ~2.1 MB total). Frames 11–12 are still placeholders until he sends 2 more.
 2. Optional: a music audio file to replace the WebAudio piano, if he wants his own track.
-3. How to share it: GitHub + Cloudflare Pages deployment is the parent agent's next step (not done by this rebuild).
+3. Live at https://rdgaming6.github.io/khushi-birthday-website/ (GitHub Pages, enabled 11 Nov 18:29 IST). Cloudflare Pages still blocked (Turnstile + SSO failures) — retry later if wanted.
 
 ## Not done / caveats
 - Not hosted / not sent to Khushi. Do not share with anyone except Rajas.
