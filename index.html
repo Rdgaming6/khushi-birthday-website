@@ -98,8 +98,8 @@ h2 .gold{color:var(--gold2)}
 .polaroid:nth-child(even){transform:rotate(1.4deg)}
 .polaroid:nth-child(3n){transform:rotate(-.6deg)}
 .polaroid:hover{transform:scale(1.045) rotate(0deg);box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 0 3px rgba(212,175,55,.65);z-index:2}
-.frame-img{height:230px;border-radius:8px;overflow:hidden;position:relative;background:linear-gradient(135deg,#f7a8c4,#c9a7eb,#ffd9e8);display:flex;align-items:center;justify-content:center}
-.frame-img img{width:100%;height:100%;object-fit:cover;display:block}
+.frame-img{height:auto;min-height:200px;border-radius:8px;overflow:hidden;position:relative;background:linear-gradient(135deg,#f7a8c4,#c9a7eb,#ffd9e8);display:flex;align-items:center;justify-content:center}
+.frame-img img{width:100%;height:auto;display:block}
 .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#6d1a3c;text-align:center;padding:12px}
 .ph .big{font-size:44px}
 .ph .ph-label{font-size:13px;font-weight:600}
@@ -153,7 +153,7 @@ h2 .gold{color:var(--gold2)}
 .toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:rgba(255,255,255,.94);color:#6d1a3c;padding:10px 18px;border-radius:999px;font-size:14px;z-index:160;box-shadow:0 10px 30px rgba(0,0,0,.35);display:none}
 @media (max-width:560px){
   section{padding:60px 16px}
-  .frame-img{height:210px}
+  .frame-img{height:auto;min-height:180px}
   .controls{right:10px;bottom:10px;padding:6px 9px}
   .controls input{width:56px}
   .letter{padding:24px 18px;font-size:16px}
@@ -183,7 +183,7 @@ h2 .gold{color:var(--gold2)}
   <p style="font-family:'Playfair Display',serif;font-size:clamp(21px,5vw,27px);margin-top:14px">Happy Birthday, Khushi! ❤️</p>
   <p class="lead" style="margin-top:10px">12 November 2026 &nbsp;·&nbsp; 19th Birthday &nbsp;·&nbsp; 403 days since 5 October 2025</p>
   <button class="btn glow-btn" id="openBtn">✨ Open Your Surprise ✨</button>
-  <p style="margin-top:16px;font-size:13px;opacity:.75">Tap once — music starts, and the surprise begins. 🎵</p>
+  <p style="margin-top:16px;font-size:13px;opacity:.75">Music starts as the page opens — if your phone holds it back, one tap anywhere starts it. 🎵</p>
 </section>
 
 <!-- SHAYARI · chosen #2 -->
@@ -395,6 +395,7 @@ var MELODY=[
 function midiToFreq(m){return 440*Math.pow(2,(m-69)/12)}
 function playMelodyStep(){
   if(!musicOn)return;
+  if(actx&&actx.state==='suspended'){musicTimer=setTimeout(playMelodyStep,400);return}
   var beat=0.42, v=vol()*0.14;
   var total=0;
   MELODY.forEach(function(n){total+=n[1]});
@@ -431,6 +432,18 @@ $('soundBtn').addEventListener('click',function(){
   syncControls();if(soundOn){popSound()}toast(soundOn?'Sound effects on':'Sound effects off');
 });
 syncControls();
+
+/* ---------- music: try to start immediately on open ---------- */
+/* Phones/browsers often block audible autoplay until the first tap, so we
+   try on load AND resume on the very first touch/click/keypress anywhere.
+   The melody holds its place while the audio is suspended, so nothing
+   is played silently through. */
+if(!musicMuted){startMusic()}
+['pointerdown','touchstart','keydown'].forEach(function(ev){
+  document.addEventListener(ev,function(){
+    if(!musicOn&&!musicMuted){startMusic()}else{try{ctx()}catch(e){}}
+  },{once:true});
+});
 
 /* heart bursts on empty-area clicks (not on controls) */
 document.addEventListener('click',function(e){
