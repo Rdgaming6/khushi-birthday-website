@@ -504,13 +504,14 @@ for(var g=1;g<=12;g++){
     d.innerHTML=
       '<div class="frame-img">'+
         '<div class="ph"><span class="big">💗</span><span class="ph-label">Photo '+pad(num)+' — KuHuuu</span><span class="ph-note">Add photos/photo-'+pad(num)+'.jpg</span></div>'+
-        '<img loading="lazy" src="'+src+'" alt="Khushi Koli — photo '+num+'" style="display:none">'+
+        '<img loading="lazy" src="'+src+'" alt="Khushi Koli — photo '+num+'">'+
       '</div>'+
       '<p class="num">Photo '+pad(num)+' · 12 frames for the 12th</p>'+
       '<p class="cap">'+cap+'</p>';
     var img=d.querySelector('img'), ph=d.querySelector('.ph');
     img.addEventListener('load',function(){if(img.naturalWidth>0){img.style.display='block';ph.style.display='none'}});
     img.addEventListener('error',function(){img.style.display='none';ph.style.display='flex'});
+    if(img.complete&&img.naturalWidth>0){img.style.display='block';ph.style.display='none'}
     function openViewer(){
       popSound();
       $('viewerCap').textContent='Photo '+pad(num)+' — '+cap;
