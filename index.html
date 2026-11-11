@@ -141,6 +141,12 @@ h2 .gold{color:var(--gold2)}
 #finale{background:radial-gradient(circle at 50% 30%,#6d1a3c,#1c0613 75%);padding-bottom:110px;overflow:hidden}
 #finaleName{font-size:clamp(32px,7vw,56px);text-shadow:0 0 34px rgba(255,92,138,.8);animation:pulse 2s infinite}
 #fireworks{width:100%;height:230px;display:block}
+.finale-stage{position:relative;height:230px;margin:6px 0 2px}
+.finale-stage canvas{position:absolute;inset:0}
+.finale-centre{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:2}
+.finale-19{font-family:'Playfair Display',serif;font-weight:800;font-size:104px;line-height:.95;color:#f5d67a;text-shadow:0 0 18px rgba(212,175,55,.85),0 0 46px rgba(255,92,138,.75),0 4px 0 rgba(109,26,60,.55);animation:pulse 2.2s infinite}
+.finale-cake{font-size:46px;line-height:1;margin-top:2px;filter:drop-shadow(0 0 14px rgba(255,92,138,.8))}
+.finale-tag{margin-top:8px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#ffd9e8;text-shadow:0 2px 12px rgba(0,0,0,.5)}
 .finale-photos{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0 6px}
 .finale-photos span{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f7a8c4,#c9a7eb);display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid rgba(212,175,55,.8);box-shadow:0 0 16px rgba(255,92,138,.5)}
 /* controls */
@@ -312,7 +318,14 @@ Tumhara Rajas</div>
   <p class="eyebrow">The finale</p>
   <h2 id="finaleName">Happy 19th Birthday, Khushi Koli! ❤️</h2>
   <p class="nickname" style="margin-top:8px">Happy Birthday, KuHuuu! 🎂💗</p>
-  <canvas id="fireworks" aria-label="Pink and golden fireworks"></canvas>
+  <div class="finale-stage">
+    <canvas id="fireworks" aria-label="Pink and golden fireworks"></canvas>
+    <div class="finale-centre" aria-hidden="true">
+      <div class="finale-19">19</div>
+      <div class="finale-cake">🎂</div>
+      <p class="finale-tag">Nineteen &amp; glowing ✨</p>
+    </div>
+  </div>
   <div class="finale-photos" aria-hidden="true">
     <span>💗</span><span>🌸</span><span>💖</span><span>🌹</span><span>✨</span><span>💗</span>
   </div>
@@ -672,7 +685,7 @@ function startFireworks(){
   if(reduced){launch();drawFire();return}
   launch();drawFire();
   if(fireTimer){clearInterval(fireTimer)}
-  fireTimer=setInterval(launch,1400);
+  fireTimer=setInterval(function(){launch();if(Math.random()<0.5){launch()}},800);
 }
 if('IntersectionObserver' in window){
   var fobs=new IntersectionObserver(function(entries){
